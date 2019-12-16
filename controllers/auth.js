@@ -1,16 +1,15 @@
-const jwt = require('jsonwebtoken');
-const key = require('../routes/key');
+const jwt = require('jsonwebtoken'),
+    key = require('../routes/key');
 
-const getToken = async(payload) => {
-    const token = jwt.sign(payload, key.PRIVATE_KEY, key.signOptions);
-    return token;
+const getToken = (payload) => {
+    return jwt.sign(payload, key.PRIVATE_KEY, key.signOptions);
 }
 
-const verifyToken = async(token) => {
+const verifyToken = (token) => {
     return jwt.verify(token, key.PRIVATE_KEY, key.signOptions);
 }
 
-const getTokenFromHeader = async(req) => {
+const getTokenFromHeader = (req) => {
     const token = req.headers.authorization;
     if (token && token.split(' ')[0] === 'Token' ||
         token && token.split(' ')[0] === 'Bearer') {
@@ -22,9 +21,9 @@ const getTokenFromHeader = async(req) => {
 const authorizated = (req, res, next) => {
     const pure_token = getTokenFromHeader(req);
     if (pure_token !== null) {
-        verifyToken(pure_token) === null ? res.status(111) : next();
+        verifyToken(pure_token) !== null && next();
     }
-    res.status(111);
+    res.status(111).json({ message: `Unauthorized` });
 }
 
 module.exports = { getToken, verifyToken, authorizated };

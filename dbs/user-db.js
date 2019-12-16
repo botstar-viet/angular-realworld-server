@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
-const uuidv4 = require("uuid/v4");
-const UserSchema = require("../models/User");
-const uris = "mongodb://localhost:27017/realworld";
-const auth = require('../controllers/auth');
+const mongoose = require("mongoose"),
+    uuidv4 = require("uuid/v4"),
+    UserSchema = require("../models/User"),
+    uris = "mongodb://localhost:27017/realworld",
+    md5 = require('MD5');
+
 
 
 const options = {
@@ -22,17 +23,17 @@ const options = {
 
 mongoose.connect(uris, options);
 // mongoose.connection.on(`open`, async() => {
-//     const rs = await getOneByID('26530f80-1eea-4d2b-98cb-c58a2ab82098');
-//     const token = await auth.getToken(rs);
-//     console.log({ token });
-//     const verify = await auth.verifyToken(token);
-//     console.log({ verify });
+//     const user = await checkAccount('pviet', '1234');
+//     console.log({ user });
 // })
 
 const User = mongoose.model("User", UserSchema);
 
-const checkAccount = async(username, password) => {
-    const user = await User.findOne({ username, password }).lean();
+const checkAccount = async(username, pass) => {
+    const password = md5(pass);
+    let user = await User.findOne({ username, password }).lean();
+    user.password = pass;
+    console.log({ user }, 'db');
     return user;
 };
 
@@ -51,22 +52,14 @@ const insertOne = async(username, email, password) => {
         _id: uuidv4(),
         username: username,
         email: email,
-        password: password
+        password: md5(password),
     });
     const insert = await User.create(user);
     return insert;
 };
 
-const updateOne = async user => {
-    let userUpdate = await User.findById({ _id: user._id }).lean();
-    userUpdate = merge(user, userUpdate);
-    const update = await User.findByIdAndUpdate({ _id: user._id }, {
-        username: userUpdate.username,
-        email: userUpdate.email,
-        password: userUpdate.password,
-        articles: userUpdate.articles,
-        favorites: userUpdate.favorites
-    });
+const updateOne = async(user) => {
+    const update = await User.findByIdAndUpdate({ _id: user._id }, { user });
     return update;
 };
 
@@ -79,24 +72,6 @@ const favoriteArticle = async(article, username) => {
     //TODO
 };
 
-const merge = (input, result) => {
-    if (input.username !== null) {
-        result.username = input.username;
-    }
-    if (input.email !== null) {
-        result.email = input.email;
-    }
-    if (input.password !== null) {
-        result.password = input.password;
-    }
-    if (input.articles !== null) {
-        result.articles = input.articles;
-    }
-    if (input.favorites !== null) {
-        result.favorites = input.favorites;
-    }
-    return result;
-};
 
 module.exports = {
     getOne,

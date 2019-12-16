@@ -1,12 +1,11 @@
 const router = require('express').Router(),
-    article = require('../controllers/article'),
-    errorHandler = require('./error');
+    article = require('../controllers/article');
 
-router.get('/articles', article.getArticles, errorHandler.handleError);
-router.get('/articles/:userId', article.getArticlesByUser, errorHandler.handleError);
-router.get('/article/:id', article.getArticleById, errorHandler.handleError);
-router.post('/article', article.createArticle, errorHandler.handleError);
-router.post('/article/editor', article.updateArticle, errorHandler.handleError);
-router.post('/article/delete', article.deleteArticle, errorHandler.handleError);
+router.get('/articles', article.getArticles);
+router.get('/articles/:userId', article.getArticlesByUser);
+router.get('/article/:id', article.getArticleById);
+router.post('/article', article.createArticle);
+router.post('/article/editor', article.updateArticle);
+router.post('/article/delete', article.deleteArticle);
 
 module.exports = router;

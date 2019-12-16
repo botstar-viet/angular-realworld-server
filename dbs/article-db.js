@@ -57,21 +57,13 @@ const getManyByUserId = async(userId) => {
 
 const insertOne = async(article) => {
     article._id = uuidv4();
+    article.favorites = [];
     const insert = await Article.create(article);
     return insert;
 }
 
 const updateOne = async(article) => {
-    let articleUpdate = await Article.findById(article._id);
-    articleUpdate = await merge(article, articleUpdate);
-    console.log(articleUpdate);
-    const update = await Article.findByIdAndUpdate({ _id: article._id }, {
-        title: articleUpdate.title,
-        description: articleUpdate.description,
-        body: articleUpdate.body,
-        favorites: articleUpdate.favorites,
-        favoriteCount: articleUpdate.favoriteCount,
-    });
+    const update = await Article.findByIdAndUpdate({ _id: article._id }, { article });
     console.log({ update });
     return update;
 }
@@ -87,25 +79,6 @@ const updateFavorites = async(user, article) => {
     articleUpdate.favoriteCount++;
     const favorites = await updateOne(articleUpdate);
     return favorites;
-}
-
-const merge = async(input, result) => {
-    if (input.title !== null) {
-        result.title = input.title;
-    }
-    if (input.description !== null) {
-        result.description = input.description;
-    }
-    if (input.body !== null) {
-        result.body = input.body;
-    }
-    if (input.favorites !== null) {
-        result.favorites = input.favorites;
-    }
-    if (input.favoriteCount !== null) {
-        result.favoriteCount = input.favoriteCount;
-    }
-    return result;
 }
 
 module.exports = { getOne, getMany, insertOne, updateOne, dropOne, updateFavorites, getManyByUserId, getManyByTtile };
