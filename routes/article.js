@@ -1,18 +1,12 @@
-const router = require('express').Router();
-const article = require('../controllers/article')
-const articledb = require('../dbs/article-db');
+const router = require('express').Router(),
+    article = require('../controllers/article'),
+    errorHandler = require('./error');
 
-// router.get('/articles/', (req, res) => {
-//     console.log(req.body);
-//     let articles = [];
-//     articles = await articledb.getMany();
-//     res.send(articles);
-// });
-router.get('/articles', article.getArticles);
-router.get('/articles/:userId', article.getArticlesByUser);
-router.get('/article/:id', article.getArticleById);
-router.post('/article', article.createArticle);
-router.post('/article/editor', article.updateArticle);
-router.post('/article/delete', article.deleteArticle);
+router.get('/articles', article.getArticles, errorHandler.handleError);
+router.get('/articles/:userId', article.getArticlesByUser, errorHandler.handleError);
+router.get('/article/:id', article.getArticleById, errorHandler.handleError);
+router.post('/article', article.createArticle, errorHandler.handleError);
+router.post('/article/editor', article.updateArticle, errorHandler.handleError);
+router.post('/article/delete', article.deleteArticle, errorHandler.handleError);
 
 module.exports = router;

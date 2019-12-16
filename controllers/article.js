@@ -6,9 +6,7 @@ const getArticlesByUser = (req, res, next) => {
         .then(
             rs => res.send(rs)
         )
-        .catch(
-            err => console.trace(err)
-        )
+        .catch(next())
 }
 
 const getArticles = (req, res, next) => {
@@ -18,17 +16,13 @@ const getArticles = (req, res, next) => {
             .then(
                 rs => res.send(rs)
             )
-            .catch(
-                err => console.log(err)
-            )
+            .catch(next())
     } else {
         ArticleDB.getMany()
             .then(
                 rs => res.send(rs)
             )
-            .catch(
-                err => console.log(err)
-            )
+            .catch(next())
     }
 }
 
@@ -39,23 +33,21 @@ const createArticle = (req, res, next) => {
         .then(
             rs => res.send(rs)
         )
-        .catch(
-            err => console.log(err)
-        )
+        .catch(next())
 }
 
 const getArticleById = (req, res, next) => {
     const id = req.params.id;
     ArticleDB.getOne(id)
         .then(rs => res.send(rs))
-        .catch(err => console.log(err))
+        .catch(next())
 }
 
 const updateArticle = (req, res, next) => {
     const article = req.body;
     ArticleDB.updateOne(article)
         .then(rs => res.send(rs))
-        .catch(err => console.log(err))
+        .catch(next())
 }
 
 const deleteArticle = (req, res, next) => {
@@ -64,7 +56,7 @@ const deleteArticle = (req, res, next) => {
     console.log(req.body.id);
     ArticleDB.dropOne(id)
         .then(rs => res.send(rs))
-        .catch(err => console.log(err))
+        .catch(next())
 }
 
 module.exports = { getArticlesByUser, getArticles, createArticle, getArticleById, updateArticle, deleteArticle };

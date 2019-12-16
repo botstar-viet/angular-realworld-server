@@ -10,21 +10,21 @@ const login = (req, res, next) => {
             console.log({ u });
             res.send(u);
         })
-        .catch(err => console.log(err));
+        .catch(next());
 };
 
 const regis = (req, res, next) => {
     const user = req.body;
     UserDB.insertOne(user.username, user.email, user.password)
         .then(rs => res.send(rs))
-        .catch(err => console.log(err))
+        .catch(next())
 };
 
 const getUserByID = (req, res, next) => {
     const id = req.params.userId;
     UserDB.getOneByID(id)
         .then(rs => res.send(rs))
-        .catch(err => console.trace(err))
+        .catch(next())
 }
 
 module.exports = { login, regis, getUserByID };

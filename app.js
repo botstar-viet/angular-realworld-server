@@ -1,7 +1,4 @@
-const http = require('http'),
-    path = require('path'),
-    methods = require('methods'),
-    express = require('express'),
+const express = require('express'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     cors = require('cors'),
@@ -26,28 +23,6 @@ app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/article'));
 app.use('/api', require('./routes/article'));
 app.use('/api', require('./routes/auth'));
-
-
-
-app.use(function(req, res, next) {
-    const err = new Error('Not Found');
-    console.log(err);
-    err.status = 404;
-    next(err);
-});
-
-app.use(function(err, req, res, next) {
-    console.log(err.stack);
-
-    res.status(err.status || 500);
-
-    res.json({
-        'errors': {
-            message: err.message,
-            error: err
-        }
-    });
-});
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, function() {
